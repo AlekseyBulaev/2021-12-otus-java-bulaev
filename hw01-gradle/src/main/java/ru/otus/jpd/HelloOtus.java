@@ -1,3 +1,5 @@
+package ru.otus.jpd;
+
 import com.google.common.base.MoreObjects;
 
 public class HelloOtus {

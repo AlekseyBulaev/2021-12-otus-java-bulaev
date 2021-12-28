@@ -28,7 +28,7 @@ tasks {
         archiveClassifier.set("all")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         manifest {
-            attributes("Main-Class" to "HelloOtus")
+            attributes("Main-Class" to "ru.otus.jdp.HelloOtus")
         }
         from(configurations.runtimeClasspath.get()
             .onEach { println("add from dependencies: ${it.name}") }
