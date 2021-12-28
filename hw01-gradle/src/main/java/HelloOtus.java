@@ -1,7 +1,7 @@
 import com.google.common.base.MoreObjects;
 
 public class HelloOtus {
-private final String name;
+    private final String name;
 
     public HelloOtus(String name) {
         this.name = name;
