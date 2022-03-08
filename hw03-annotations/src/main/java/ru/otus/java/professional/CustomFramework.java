@@ -24,25 +24,26 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomFramework<T> {
 
-    public void start(String className) {
+    public String start(String className) {
+        AtomicInteger failed = new AtomicInteger(0);
+        AtomicInteger passed = new AtomicInteger(0);
         try {
             Class<?> targetClass = Class.forName(className);
             T instanceClass = (T) targetClass.newInstance();
-            AtomicInteger failed = new AtomicInteger(0);
-            AtomicInteger passed = new AtomicInteger(0);
             Set<TestingObject> testingObjects = populateFields(targetClass.getDeclaredMethods());
             invokeMethods(instanceClass, testingObjects, failed, passed);
-            printResult(failed, passed);
+            return printResult(failed, passed);
         } catch (ClassNotFoundException ex) {
             System.out.printf("Error: %s" + " Not found%n", className);
             ex.printStackTrace();
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
+        return printResult(failed, passed);
     }
 
-    private void printResult(AtomicInteger failed, AtomicInteger passed) {
-        System.out.printf("TOTAL= %s \nFAILED= %s \nPASSED= %s", failed.get() + passed.get(), failed.get(), passed.get());
+    private String printResult(AtomicInteger failed, AtomicInteger passed) {
+        return String.format("TOTAL= %s \nFAILED= %s \nPASSED= %s", failed.get() + passed.get(), failed.get(), passed.get());
     }
 
     private void invokeMethods(T instanceClass,
