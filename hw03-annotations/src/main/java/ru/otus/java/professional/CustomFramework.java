@@ -1,5 +1,8 @@
 package ru.otus.java.professional;
 
+import ru.otus.java.professional.annotations.After;
+import ru.otus.java.professional.annotations.Before;
+import ru.otus.java.professional.annotations.Test;
 import ru.otus.java.professional.model.TestingObject;
 
 import java.lang.reflect.InvocationTargetException;
@@ -58,6 +61,7 @@ public class CustomFramework<T> {
             } catch (Exception e) {
                 failed.addAndGet(1);
                 e.printStackTrace();
+                obj.afterAnnotationMethods().forEach(after -> invokeMethod(instanceClass, after));
             }
         });
     }
@@ -75,13 +79,13 @@ public class CustomFramework<T> {
         Set<Method> afterAnnotationMethods = new HashSet<>();
         List<Method> testAnnotationMethods = new ArrayList<>();
         Arrays.stream(candidates).forEach(method -> Arrays.stream(method.getAnnotations()).forEach(annotation -> {
-            if (annotation.toString().contains("Before")) {
+            if (Before.class.getName().equals(annotation.annotationType().getName())) {
                 beforeAnnotationMethods.add(method);
             }
-            if (annotation.toString().contains("After")) {
+            if (After.class.getName().equals(annotation.annotationType().getName())) {
                 afterAnnotationMethods.add(method);
             }
-            if (annotation.toString().contains("Test")) {
+            if (Test.class.getName().equals(annotation.annotationType().getName())) {
                 testAnnotationMethods.add(method);
             }
         }));
