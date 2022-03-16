@@ -3,12 +3,14 @@ package ru.otus.java.professional;
 import ru.otus.java.professional.annotations.After;
 import ru.otus.java.professional.annotations.Before;
 import ru.otus.java.professional.annotations.Test;
-import ru.otus.java.professional.model.TestingObject;
+import ru.otus.java.professional.model.CustomAnnotations;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static ru.otus.java.professional.model.CustomAnnotations.*;
 
 /*
     Создать "запускалку теста". На вход она должна получать имя класса с тестами,
@@ -25,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
  */
 
-public class CustomFramework<T> {
+public class Framework<T> {
 
     public String start(String className) {
         AtomicInteger failed = new AtomicInteger(0);
@@ -33,7 +35,7 @@ public class CustomFramework<T> {
         try {
             Class<?> targetClass = Class.forName(className);
             T instanceClass = (T) targetClass.newInstance();
-            Set<TestingObject> testingObjects = populateFields(targetClass.getDeclaredMethods());
+            Map<CustomAnnotations, Collection<Method>> testingObjects = populateFields(targetClass.getDeclaredMethods());
             invokeMethods(instanceClass, testingObjects, failed, passed);
             return printResult(failed, passed);
         } catch (ClassNotFoundException ex) {
@@ -50,18 +52,18 @@ public class CustomFramework<T> {
     }
 
     private void invokeMethods(T instanceClass,
-                               Set<TestingObject> testingObjects,
+                               Map<CustomAnnotations, Collection<Method>> testingObjects,
                                AtomicInteger failed, AtomicInteger passed) {
-        testingObjects.forEach(obj -> {
+        testingObjects.get(TEST).forEach( obj -> {
             try {
-                obj.beforeAnnotationMethods().forEach(before -> invokeMethod(instanceClass, before));
-                obj.method().invoke(instanceClass);
-                obj.afterAnnotationMethods().forEach(after -> invokeMethod(instanceClass, after));
+                testingObjects.get(BEFORE).forEach(before -> invokeMethod(instanceClass, before));
+                obj.invoke(instanceClass);
+                testingObjects.get(AFTER).forEach(after -> invokeMethod(instanceClass, after));
                 passed.addAndGet(1);
             } catch (Exception e) {
                 failed.addAndGet(1);
                 e.printStackTrace();
-                obj.afterAnnotationMethods().forEach(after -> invokeMethod(instanceClass, after));
+                testingObjects.get(AFTER).forEach(after -> invokeMethod(instanceClass, after));
             }
         });
     }
@@ -74,7 +76,7 @@ public class CustomFramework<T> {
         }
     }
 
-    private Set<TestingObject> populateFields(Method[] candidates) {
+    private Map<CustomAnnotations, Collection<Method>> populateFields(Method[] candidates) {
         Set<Method> beforeAnnotationMethods = new HashSet<>();
         Set<Method> afterAnnotationMethods = new HashSet<>();
         List<Method> testAnnotationMethods = new ArrayList<>();
@@ -89,11 +91,7 @@ public class CustomFramework<T> {
                 testAnnotationMethods.add(method);
             }
         }));
-        Set<TestingObject> testingObjects = new HashSet<>();
 
-        //
-       testAnnotationMethods.forEach(method ->
-               testingObjects.add(new TestingObject(method, beforeAnnotationMethods, afterAnnotationMethods)));
-       return testingObjects;
+       return Map.of(BEFORE, beforeAnnotationMethods, AFTER, afterAnnotationMethods, TEST, testAnnotationMethods);
     }
 }
