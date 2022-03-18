@@ -34,15 +34,12 @@ public class Framework<T> {
         AtomicInteger passed = new AtomicInteger(0);
         try {
             Class<?> targetClass = Class.forName(className);
-            T instanceClass = (T) targetClass.newInstance();
             Map<CustomAnnotations, Collection<Method>> testingObjects = populateFields(targetClass.getDeclaredMethods());
-            invokeMethods(instanceClass, testingObjects, failed, passed);
+            invokeMethods(targetClass, testingObjects, failed, passed);
             return printResult(failed, passed);
         } catch (ClassNotFoundException ex) {
             System.out.printf("Error: %s" + " Not found%n", className);
             ex.printStackTrace();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
         }
         return printResult(failed, passed);
     }
@@ -51,19 +48,25 @@ public class Framework<T> {
         return String.format("TOTAL= %s \nFAILED= %s \nPASSED= %s", failed.get() + passed.get(), failed.get(), passed.get());
     }
 
-    private void invokeMethods(T instanceClass,
+    private void invokeMethods(Class<?> targetClass,
                                Map<CustomAnnotations, Collection<Method>> testingObjects,
                                AtomicInteger failed, AtomicInteger passed) {
-        testingObjects.get(TEST).forEach( obj -> {
+        testingObjects.get(TEST).forEach(obj -> {
             try {
-                testingObjects.get(BEFORE).forEach(before -> invokeMethod(instanceClass, before));
-                obj.invoke(instanceClass);
-                testingObjects.get(AFTER).forEach(after -> invokeMethod(instanceClass, after));
-                passed.addAndGet(1);
-            } catch (Exception e) {
+                T instanceClass = (T) targetClass.newInstance();
+                try {
+                    testingObjects.get(BEFORE).forEach(before -> invokeMethod(instanceClass, before));
+                    obj.invoke(instanceClass);
+                    testingObjects.get(AFTER).forEach(after -> invokeMethod(instanceClass, after));
+                    passed.addAndGet(1);
+                } catch (Exception e) {
+                    failed.addAndGet(1);
+                    e.printStackTrace();
+                    testingObjects.get(AFTER).forEach(after -> invokeMethod(instanceClass, after));
+                }
+            } catch (IllegalAccessException | InstantiationException e) {
                 failed.addAndGet(1);
                 e.printStackTrace();
-                testingObjects.get(AFTER).forEach(after -> invokeMethod(instanceClass, after));
             }
         });
     }
@@ -92,6 +95,6 @@ public class Framework<T> {
             }
         }));
 
-       return Map.of(BEFORE, beforeAnnotationMethods, AFTER, afterAnnotationMethods, TEST, testAnnotationMethods);
+        return Map.of(BEFORE, beforeAnnotationMethods, AFTER, afterAnnotationMethods, TEST, testAnnotationMethods);
     }
 }
