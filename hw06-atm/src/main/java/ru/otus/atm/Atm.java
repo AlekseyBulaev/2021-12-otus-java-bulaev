@@ -1,24 +1,34 @@
 package ru.otus.atm;
 
-import java.util.Set;
-
 public class Atm {
+    private final Amount balance;
+    private final MoneyService moneyService;
+    private final AmountService amountService;
 
-    private final Set<MoneyCassette> moneyCas;
-
-    public Atm(Set<MoneyCassette> moneyCas) {
-        this.moneyCas = moneyCas;
+    public Atm(Amount balance, MoneyService moneyService, AmountService amountService) {
+        this.balance = balance;
+        this.moneyService = moneyService;
+        this.amountService = amountService;
     }
 
-    public long deposit(){
-        return 1L;
+    public long deposit(long amount) {
+        Amount depositAmount = amountService.depositAmount(amount);
+        if (depositAmount.isValid()) {
+            return moneyService.deposit(balance, depositAmount);
+        }
+        throw new IllegalArgumentException("неверная сумма внесения");
     }
 
-    public long withdraw(long amount){
-        return 1L;
+    public long withdraw(long amount) {
+        if (amount > 0) {
+            Amount withdrawAmount = amountService.withdrawAmount(balance.copyAmount(), amount);
+
+            return moneyService.withdraw(balance, withdrawAmount);
+        }
+        throw new IllegalArgumentException("неверная сумма снятия");
     }
 
-    public double getAmount(String id){
-        return 1.0;
+    public long getBalance() {
+        return moneyService.getBalance(balance);
     }
 }
