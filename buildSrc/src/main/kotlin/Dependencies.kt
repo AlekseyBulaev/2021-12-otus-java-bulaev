@@ -8,7 +8,7 @@ object Libs {
     const val guava = "com.google.guava:guava:${Versions.guava}"
 
     val testImplementation = listOf(
-        "org.junit.jupiter:junit-jupiter-api:${Versions.assertj}",
+        "org.assertj:assertj-core:${Versions.assertj}",
         "org.junit.jupiter:junit-jupiter-api:${Versions.junit}",
     )
 
