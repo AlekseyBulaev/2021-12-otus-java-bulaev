@@ -1,25 +1,20 @@
 package ru.otus.atm;
 
+import java.util.Arrays;
+
 public class MoneyService {
 
-    public long deposit(Amount balance, Amount amount) {
-        balance.setFiveThousand(amount.getFiveThousand());
-        balance.setTwoThousand(amount.getTwoThousand());
-        balance.setOneThousand(amount.getOneThousand());
-        balance.setFiveHundred(amount.getFiveHundred());
-        balance.setTwoHundred(amount.getTwoHundred());
-        balance.setOneHundred(amount.getOneHundred());
-        return balance.getBalance();
+    public Amount deposit(Amount balance, Amount amount) {
+        balance.setAmount(amount);
+        return balance;
     }
 
-    public long withdraw(Amount balance, Amount amount) {
-        balance.setFiveThousand(-amount.getFiveThousand());
-        balance.setTwoThousand(-amount.getTwoThousand());
-        balance.setOneThousand(-amount.getOneThousand());
-        balance.setFiveHundred(-amount.getFiveHundred());
-        balance.setTwoHundred(-amount.getTwoHundred());
-        balance.setOneHundred(-amount.getOneHundred());
-        return balance.getBalance();
+    public Amount withdraw(Amount balance, Amount amount) {
+        Arrays.stream(Bill.values()).forEach(bill -> {
+            amount.setBillAmount(bill, -amount.getBillAmount(bill)*2);
+        });
+        balance.setAmount(amount);
+        return balance;
     }
 
     public long getBalance(Amount balance) {
