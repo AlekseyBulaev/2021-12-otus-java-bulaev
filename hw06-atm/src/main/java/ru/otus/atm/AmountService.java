@@ -9,7 +9,7 @@ public class AmountService {
             throw new IllegalArgumentException("недостаточно средств");
         }
 
-        Amount result = new Amount(0, 0, 0, 0, 0, 0);
+        Amount result = new Amount();
 
         while (result.getBalance() != amount) {
             if (result.getBalance() > amount) {

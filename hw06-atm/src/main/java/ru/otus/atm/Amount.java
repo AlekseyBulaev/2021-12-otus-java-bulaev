@@ -1,21 +1,16 @@
 package ru.otus.atm;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.otus.atm.Bill.*;
-
 public class Amount {
-    private Map<Bill, Long> billsAmount;
+    private final Map<Bill, Long> billsAmount = new HashMap<>();
 
-    public Amount(long fiveThousand, long twoThousand, long oneThousand, long fiveHundred, long twoHundred, long oneHundred) {
-        billsAmount = new HashMap<Bill, Long>();
-        billsAmount.put(FIVE_THOUSAND, fiveThousand);
-        billsAmount.put(TWO_THOUSAND, twoThousand);
-        billsAmount.put(ONE_THOUSAND, oneThousand);
-        billsAmount.put(FIVE_HUNDRED, fiveHundred);
-        billsAmount.put(TWO_HUNDRED, twoHundred);
-        billsAmount.put(ONE_HUNDRED, oneHundred);
+    public Amount() {
+        Arrays.stream(Bill.values()).forEach(bill -> {
+            billsAmount.put(bill, 0L);
+        });
     }
 
     public long getBillAmount(Bill bill) {
@@ -28,14 +23,13 @@ public class Amount {
     }
 
     public Amount copyAmount() {
-        return new Amount(
-                billsAmount.get(FIVE_THOUSAND),
-                billsAmount.get(TWO_THOUSAND),
-                billsAmount.get(ONE_THOUSAND),
-                billsAmount.get(FIVE_HUNDRED),
-                billsAmount.get(TWO_HUNDRED),
-                billsAmount.get(ONE_HUNDRED)
-        );
+        Amount amount = new Amount();
+        billsAmount.forEach(amount::addBill);
+        return amount;
+    }
+
+    public void addBill(Bill bill, long amount) {
+        billsAmount.put(bill, amount);
     }
 
     public boolean isValid() {

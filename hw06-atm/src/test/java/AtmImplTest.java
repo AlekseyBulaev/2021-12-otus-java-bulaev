@@ -7,16 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AtmImplTest {
 
     AtmImpl getAtm() {
-        return new AtmImpl(
-                new Amount(
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        100)
+        Amount amount = new Amount();
+        amount.addBill(Bill.ONE_HUNDRED, 100);
+        var atm = new AtmImpl(
+                amount
                 , new MoneyService()
                 , new AmountService());
+
+        return atm;
     }
 
     @Test
@@ -29,7 +27,12 @@ public class AtmImplTest {
     @Test
     @DisplayName("Успешный ввод денег")
     public void AtmDepositTest() {
-        Amount depositAmount = new Amount(4, 2, 0, 1, 2, 0);
+        Amount depositAmount = new Amount();
+        depositAmount.addBill(Bill.FIVE_THOUSAND, 4);
+        depositAmount.addBill(Bill.TWO_THOUSAND, 2);
+        depositAmount.addBill(Bill.FIVE_HUNDRED, 1);
+        depositAmount.addBill(Bill.TWO_HUNDRED, 2);
+
         Atm atmImpl = getAtm();
         atmImpl.deposit(depositAmount);
         assertEquals(34900, atmImpl.getBalance());
@@ -39,8 +42,9 @@ public class AtmImplTest {
     @DisplayName("Успешный вывод денег")
     public void AtmWithdrawTest() {
         Atm atmImpl = getAtm();
-        Amount depositAmmount = new Amount(0, 0, 3, 0, 0, 0);
-        atmImpl.deposit(depositAmmount);
+        Amount depositAmount = new Amount();
+        depositAmount.addBill(Bill.ONE_THOUSAND, 3);
+        atmImpl.deposit(depositAmount);
         atmImpl.withdraw(7800);
         assertEquals(5200, atmImpl.getBalance());
     }
