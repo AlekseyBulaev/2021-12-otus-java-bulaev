@@ -1,50 +1,55 @@
 package ru.otus;
 
+
 import ru.otus.model.Log;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LogProxy {
 
-    public static void invokeWithLogging(String className) throws Exception {
-        Class<?> loggingClass = Class.forName(className);
-        Class<?> loggingInterface = null;
-        if (loggingClass.getInterfaces().length != 1) {
-            throw new RuntimeException("Количество наследуемых интерфейсов != 1");
-        } else {
-            loggingInterface = loggingClass.getInterfaces()[0];
+
+    private LogProxy() {
+    }
+
+    static TestLogging createTestLogging() {
+        InvocationHandler handler = new ProxyInstance(new TestLoggingImpl());
+        return (TestLogging) Proxy.newProxyInstance(LogProxy.class.getClassLoader(),
+                new Class<?>[]{TestLogging.class}, handler);
+    }
+
+    static class ProxyInstance implements InvocationHandler {
+        private final TestLogging myClass;
+
+        ProxyInstance(TestLogging myClass) {
+            this.myClass = myClass;
         }
-        List<Method> loggingMethods = getLoggingMethods(loggingClass);
-        validate(loggingMethods, loggingInterface);
 
-        loggingMethods.forEach(LogProxy::invokeWithProxy);
-    }
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            if (hasLogging(method)){
+            String result = Arrays.stream(args).reduce((x, it) -> "params: " + x + ", " + it.toString()).get().toString();
+            System.out.println("invoking method: " + method.getName() + " " + result);}
+            return method.invoke(myClass, args);
+        }
 
-    private static void invokeWithProxy(Method method) {
+        private boolean hasLogging(Method method) throws ClassNotFoundException{
+            List<Method> methods = Arrays.stream(Class.forName("ru.otus.TestLoggingImpl").getMethods())
+                    .filter(mthd -> Arrays.stream(mthd.getAnnotations()).anyMatch(ann -> ann.annotationType() == Log.class))
+                    .toList();
+            return methods.stream().anyMatch(mthd -> mthd.getName().equals(method.getName())
+                    && mthd.getParameterCount() == method.getParameterCount()
+                    && Arrays.equals(mthd.getParameterTypes(), method.getParameterTypes()));
+        }
 
-
-    }
-
-    private static void validate(List<Method> loggingMethods, Class<?> loggingInterface) {
-        if(!Arrays.stream(loggingInterface.getDeclaredMethods()).allMatch(loggingMethods::contains)) {
-            throw new RuntimeException("Методы в интерфейсе и наследнике не совпадают");
+        @Override
+        public String toString() {
+            return "TestLogging{" +
+                    "myClass=" + myClass +
+                    '}';
         }
     }
-
-    //Первая реализация, считаем, что все методы одного интерфейса реализованы в классе
-    private static List<Method> getLoggingMethods(Class<?> loggingClass) {
-
-        List<Class<?>> interfaces = Arrays.stream(loggingClass.getInterfaces()).toList();
-
-        List<Method> methods = Arrays.stream(loggingClass.getDeclaredMethods())
-                .filter(method ->
-                        Arrays.stream(method.getAnnotations())
-                                .anyMatch(methodAnnotation -> Log.class == methodAnnotation.annotationType()))
-                .toList();
-
-        return interfaces.stream().collect(Collectors.toMap(in -> in, methods.stream().filter(method -> method.getClass() == in)))
-
-    }
+}
