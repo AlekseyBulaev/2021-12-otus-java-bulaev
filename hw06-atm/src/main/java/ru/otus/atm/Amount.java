@@ -1,35 +1,41 @@
 package ru.otus.atm;
 
-import java.util.Arrays;
+import ru.otus.atm.model.Bill;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Amount {
-    private final Map<Bill, Long> billsAmount = new HashMap<>();
+    private Map<Bill, Long> billsAmount;
 
     public Amount() {
-        Arrays.stream(Bill.values()).forEach(bill -> {
-            billsAmount.put(bill, 0L);
-        });
+        this.billsAmount = new TreeMap<>();
+    }
+
+    public Amount(Map<Bill, Long> billsAmount) {
+        this.billsAmount = billsAmount;
+    }
+
+    public Map<Bill, Long> getBillsAmount () {
+        return billsAmount;
     }
 
     public long getBillAmount(Bill bill) {
+        billsAmount.putIfAbsent(bill, 0L);
         return billsAmount.get(bill);
     }
 
     public void setBillAmount(Bill bill, long amount) {
+        billsAmount.putIfAbsent(bill, 0L);
         var result = billsAmount.get(bill) + amount;
         billsAmount.put(bill, result);
     }
 
     public Amount copyAmount() {
-        Amount amount = new Amount();
-        billsAmount.forEach(amount::addBill);
+        Amount amount = new Amount(new HashMap<>());
+        billsAmount.forEach(amount::setBillAmount);
         return amount;
-    }
-
-    public void addBill(Bill bill, long amount) {
-        billsAmount.put(bill, amount);
     }
 
     public boolean isValid() {
@@ -37,12 +43,13 @@ public class Amount {
     }
 
     public long getBalance() {
-        return billsAmount.keySet().stream().mapToLong(x -> x.getCount() * billsAmount.get(x)).sum();
+        return billsAmount.keySet().stream().mapToLong(x -> x.calculate(billsAmount.get(x))).sum();
     }
 
     boolean setAmount(Amount addAmount) {
-        billsAmount.keySet().forEach(bill -> {
-            var result = billsAmount.get(bill) + addAmount.getBillAmount(bill);
+        addAmount.getBillsAmount().forEach((bill, value) -> {
+            billsAmount.putIfAbsent(bill, 0L);
+            var result = billsAmount.get(bill) + value;
             if (result >= 0) {
                 billsAmount.put(bill, result);
             } else {

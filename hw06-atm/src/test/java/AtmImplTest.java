@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.atm.*;
+import ru.otus.atm.model.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -8,7 +9,8 @@ public class AtmImplTest {
 
     AtmImpl getAtm() {
         Amount amount = new Amount();
-        amount.addBill(Bill.ONE_HUNDRED, 100);
+
+        amount.setBillAmount(new OneHundred(), 100);
         var atm = new AtmImpl(
                 amount
                 , new MoneyService()
@@ -28,10 +30,10 @@ public class AtmImplTest {
     @DisplayName("Успешный ввод денег")
     public void AtmDepositTest() {
         Amount depositAmount = new Amount();
-        depositAmount.addBill(Bill.FIVE_THOUSAND, 4);
-        depositAmount.addBill(Bill.TWO_THOUSAND, 2);
-        depositAmount.addBill(Bill.FIVE_HUNDRED, 1);
-        depositAmount.addBill(Bill.TWO_HUNDRED, 2);
+        depositAmount.setBillAmount(new FiveThousand(), 4);
+        depositAmount.setBillAmount(new TwoThousand(), 2);
+        depositAmount.setBillAmount(new FiveHundred(), 1);
+        depositAmount.setBillAmount(new TwoHundred(), 2);
 
         Atm atmImpl = getAtm();
         atmImpl.deposit(depositAmount);
@@ -43,7 +45,7 @@ public class AtmImplTest {
     public void AtmWithdrawTest() {
         Atm atmImpl = getAtm();
         Amount depositAmount = new Amount();
-        depositAmount.addBill(Bill.ONE_THOUSAND, 3);
+        depositAmount.setBillAmount(new OneThousand(), 3);
         atmImpl.deposit(depositAmount);
         atmImpl.withdraw(7800);
         assertEquals(5200, atmImpl.getBalance());
