@@ -2,12 +2,11 @@ package ru.otus.atm;
 
 import ru.otus.atm.model.Bill;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class Amount {
-    private Map<Bill, Long> billsAmount;
+    private final Map<Bill, Long> billsAmount;
 
     public Amount() {
         this.billsAmount = new TreeMap<>();
@@ -33,7 +32,7 @@ public class Amount {
     }
 
     public Amount copyAmount() {
-        Amount amount = new Amount(new HashMap<>());
+        Amount amount = new Amount(new TreeMap<>());
         billsAmount.forEach(amount::setBillAmount);
         return amount;
     }
@@ -46,7 +45,7 @@ public class Amount {
         return billsAmount.keySet().stream().mapToLong(x -> x.calculate(billsAmount.get(x))).sum();
     }
 
-    boolean setAmount(Amount addAmount) {
+    void setAmount(Amount addAmount) {
         addAmount.getBillsAmount().forEach((bill, value) -> {
             billsAmount.putIfAbsent(bill, 0L);
             var result = billsAmount.get(bill) + value;
@@ -56,6 +55,5 @@ public class Amount {
                 throw new IllegalArgumentException("недостаточно средств");
             }
         });
-        return true;
     }
 }
