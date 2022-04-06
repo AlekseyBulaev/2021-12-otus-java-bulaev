@@ -18,9 +18,9 @@ public class AmountService {
     private void increment(Amount balance, Amount amount, long delta) {
         AtomicLong finalDelta = new AtomicLong(delta);
             balance.getBillsAmount().forEach((bill, value) -> {
-                while (value > 0 && finalDelta.longValue() >= bill.getOrdinal()) {
+                while (value > 0 && finalDelta.get() >= bill.getOrdinal()) {
                     value--;
-                    finalDelta.getAndAdd(-bill.getOrdinal());
+                    finalDelta.addAndGet(-bill.getOrdinal());
                     amount.setBillAmount(bill, 1);
                 }
             });

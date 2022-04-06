@@ -10,7 +10,7 @@ public class AtmImplTest {
     AtmImpl getAtm() {
         Amount amount = new Amount();
 
-        amount.setBillAmount(new OneHundred(), 100);
+        amount.setBillAmount(new Nominal(100), 100);
         var atm = new AtmImpl(
                 amount
                 , new MoneyService()
@@ -30,10 +30,10 @@ public class AtmImplTest {
     @DisplayName("Успешный ввод денег")
     public void AtmDepositTest() {
         Amount depositAmount = new Amount();
-        depositAmount.setBillAmount(new FiveThousand(), 4);
-        depositAmount.setBillAmount(new TwoThousand(), 2);
-        depositAmount.setBillAmount(new FiveHundred(), 1);
-        depositAmount.setBillAmount(new TwoHundred(), 2);
+        depositAmount.setBillAmount(new Nominal(5_000), 4);
+        depositAmount.setBillAmount(new Nominal(2_000), 2);
+        depositAmount.setBillAmount(new Nominal(500), 1);
+        depositAmount.setBillAmount(new Nominal(200), 2);
 
         Atm atmImpl = getAtm();
         atmImpl.deposit(depositAmount);
@@ -45,7 +45,7 @@ public class AtmImplTest {
     public void AtmWithdrawTest() {
         Atm atmImpl = getAtm();
         Amount depositAmount = new Amount();
-        depositAmount.setBillAmount(new OneThousand(), 3);
+        depositAmount.setBillAmount(new Nominal(1_000), 3);
         atmImpl.deposit(depositAmount);
         atmImpl.withdraw(7800);
         assertEquals(5200, atmImpl.getBalance());

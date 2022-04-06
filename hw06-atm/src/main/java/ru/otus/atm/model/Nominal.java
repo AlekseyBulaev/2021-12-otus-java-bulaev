@@ -1,9 +1,15 @@
 package ru.otus.atm.model;
 
-public class OneHundred implements Bill {
+public class Nominal implements Bill {
+
+    private final long nominal;
+
+    public Nominal(long nominal) {
+        this.nominal = nominal;
+    }
     @Override
     public long getOrdinal() {
-        return 100L;
+        return nominal;
     }
 
     @Override
@@ -18,11 +24,11 @@ public class OneHundred implements Bill {
 
     @Override
     public boolean equals(Object obj) {
-        return OneHundred.class == obj.getClass();
+        return nominal == ((Nominal) obj).getOrdinal();
     }
 
     @Override
     public int compareTo(Object o) {
-        return (int) (((Bill) o).getOrdinal() - getOrdinal());
+        return (int) (getOrdinal() - ((Bill) o).getOrdinal());
     }
 }
