@@ -6,7 +6,7 @@ public class ProxyTest {
 
     @Test
     public void test() {
-        TestLogging test = LogProxy.createTestLogging();
+        TestLogging test = LogProxy.createTestLogging(new TestLoggingImpl());
         test.calculation(1);
         test.calculation(1, "123");
         test.calculation(1, 1);

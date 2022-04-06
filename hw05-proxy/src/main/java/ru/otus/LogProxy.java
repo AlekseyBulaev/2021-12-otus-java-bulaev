@@ -15,17 +15,17 @@ public class LogProxy {
     private LogProxy() {
     }
 
-    static TestLogging createTestLogging() {
-        InvocationHandler handler = new ProxyInstance(new TestLoggingImpl());
+    static TestLogging createTestLogging(TestLogging instance) {
+        InvocationHandler handler = new ProxyInstance(instance);
         return (TestLogging) Proxy.newProxyInstance(LogProxy.class.getClassLoader(),
                 new Class<?>[]{TestLogging.class}, handler);
     }
 
     static class ProxyInstance implements InvocationHandler {
-        private final TestLogging myClass;
+        private final TestLogging testLoggingInstance;
 
-        ProxyInstance(TestLogging myClass) {
-            this.myClass = myClass;
+        ProxyInstance(TestLogging testLoggingInstance) {
+            this.testLoggingInstance = testLoggingInstance;
         }
 
         @Override
@@ -33,13 +33,11 @@ public class LogProxy {
             if (hasLogging(method)){
             String result = Arrays.stream(args).reduce((x, it) -> "params: " + x + ", " + it.toString()).get().toString();
             System.out.println("invoking method: " + method.getName() + " " + result);}
-            return method.invoke(myClass, args);
+            return method.invoke(testLoggingInstance, args);
         }
 
-        private boolean hasLogging(Method method) throws ClassNotFoundException{
-            List<Method> methods = Arrays.stream(Class.forName("ru.otus.TestLoggingImpl").getMethods())
-                    .filter(mthd -> Arrays.stream(mthd.getAnnotations()).anyMatch(ann -> ann.annotationType() == Log.class))
-                    .toList();
+        private boolean hasLogging(Method method) {
+            List<Method> methods = Arrays.stream(testLoggingInstance.getClass().getMethods()).toList();
             return methods.stream().anyMatch(mthd -> mthd.getName().equals(method.getName())
                     && mthd.getParameterCount() == method.getParameterCount()
                     && Arrays.equals(mthd.getParameterTypes(), method.getParameterTypes()));
@@ -48,7 +46,7 @@ public class LogProxy {
         @Override
         public String toString() {
             return "TestLogging{" +
-                    "myClass=" + myClass +
+                    "myClass=" + testLoggingInstance +
                     '}';
         }
     }
