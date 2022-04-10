@@ -23,21 +23,30 @@ public class LogProxy {
 
     static class ProxyInstance implements InvocationHandler {
         private final TestLogging testLoggingInstance;
+        private final List<Method> methods;
 
         ProxyInstance(TestLogging testLoggingInstance) {
             this.testLoggingInstance = testLoggingInstance;
+            methods = Arrays.stream(testLoggingInstance.getClass().getMethods())
+                    .filter(m ->
+                            Arrays.stream(m.getDeclaredAnnotations())
+                                    .anyMatch(ann -> Log.class == ann.annotationType())).toList();
         }
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if (hasLogging(method)){
-            String result = Arrays.stream(args).reduce((x, it) -> "params: " + x + ", " + it.toString()).get().toString();
-            System.out.println("invoking method: " + method.getName() + " " + result);}
+            if (hasLogging(method)) {
+                if (args != null && args.length > 0) {
+                    String result = Arrays.stream(args).reduce((x, it) -> "params: " + x + ", " + it.toString()).get().toString();
+                    System.out.println("invoking method: " + method.getName() + " " + result);
+                } else {
+                    System.out.println("invoking method: " + method.getName());
+                }
+            }
             return method.invoke(testLoggingInstance, args);
         }
 
         private boolean hasLogging(Method method) {
-            List<Method> methods = Arrays.stream(testLoggingInstance.getClass().getMethods()).toList();
             return methods.stream().anyMatch(mthd -> mthd.getName().equals(method.getName())
                     && mthd.getParameterCount() == method.getParameterCount()
                     && Arrays.equals(mthd.getParameterTypes(), method.getParameterTypes()));

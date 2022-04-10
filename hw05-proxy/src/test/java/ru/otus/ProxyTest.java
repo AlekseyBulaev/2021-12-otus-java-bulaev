@@ -2,13 +2,17 @@ package ru.otus;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 public class ProxyTest {
 
     @Test
     public void test() {
         TestLogging test = LogProxy.createTestLogging(new TestLoggingImpl());
-        test.calculation(1);
-        test.calculation(1, "123");
-        test.calculation(1, 1);
+
+        assertDoesNotThrow(() ->  test.calculation());
+        assertDoesNotThrow(() ->  test.calculation(1, 1));
+        assertDoesNotThrow(() ->  test.calculation(1));
+        assertDoesNotThrow(() ->  test.calculation(1, "123"));
     }
 }
