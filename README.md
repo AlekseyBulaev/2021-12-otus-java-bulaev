@@ -7,3 +7,6 @@ https://otus.ru/lessons/java-professional/?int_source=courses_catalog&amp;int_te
 * hw02-collections
 * hw03-annotations
 * hw04-gc
+* hw05-proxy
+* hw06-atm
+* hw07-todo
