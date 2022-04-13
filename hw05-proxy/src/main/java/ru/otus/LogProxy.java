@@ -8,6 +8,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class LogProxy {
 
@@ -23,14 +25,14 @@ public class LogProxy {
 
     static class ProxyInstance implements InvocationHandler {
         private final TestLogging testLoggingInstance;
-        private final List<Method> methods;
+        private final Set<String> methods;
 
         ProxyInstance(TestLogging testLoggingInstance) {
             this.testLoggingInstance = testLoggingInstance;
             methods = Arrays.stream(testLoggingInstance.getClass().getMethods())
-                    .filter(m ->
-                            Arrays.stream(m.getDeclaredAnnotations())
-                                    .anyMatch(ann -> Log.class == ann.annotationType())).toList();
+                    .filter(m -> m.isAnnotationPresent(Log.class))
+                    .map(Method::toString)
+                    .collect(Collectors.toSet());
         }
 
         @Override
@@ -47,9 +49,7 @@ public class LogProxy {
         }
 
         private boolean hasLogging(Method method) {
-            return methods.stream().anyMatch(mthd -> mthd.getName().equals(method.getName())
-                    && mthd.getParameterCount() == method.getParameterCount()
-                    && Arrays.equals(mthd.getParameterTypes(), method.getParameterTypes()));
+            return methods.stream().anyMatch(mthd -> mthd.equals(method.toString()));
         }
 
         @Override
