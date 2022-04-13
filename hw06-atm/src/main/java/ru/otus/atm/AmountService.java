@@ -1,5 +1,8 @@
 package ru.otus.atm;
 
+import ru.otus.atm.model.Bill;
+
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class AmountService {
@@ -16,17 +19,18 @@ public class AmountService {
     }
 
     private void increment(Amount balance, Amount amount, long delta) {
-        AtomicLong finalDelta = new AtomicLong(delta);
-            balance.getBillsAmount().forEach((bill, value) -> {
-                while (value > 0 && finalDelta.get() >= bill.getOrdinal()) {
-                    value--;
-                    finalDelta.addAndGet(-bill.getOrdinal());
-                    amount.setBillAmount(bill, 1);
-                }
-            });
-            if(finalDelta.get() != 0) {
-                throw new IllegalArgumentException(String.format("невозможно выдать остаток= %s", delta));
+        for (Map.Entry<Bill, Long> entry : balance.getBillsAmount().entrySet()) {
+            while (entry.getValue() > 0 && delta >= entry.getKey().getOrdinal()) {
+                entry.setValue(entry.getValue()-1);
+                delta -= entry.getKey().getOrdinal();
+                amount.setBillAmount(entry.getKey(), 1);
             }
+        }
+        balance.getBillsAmount().forEach((bill, value) -> {
+        });
+        if (delta != 0) {
+            throw new IllegalArgumentException(String.format("невозможно выдать остаток= %s", delta));
+        }
 
     }
 }
