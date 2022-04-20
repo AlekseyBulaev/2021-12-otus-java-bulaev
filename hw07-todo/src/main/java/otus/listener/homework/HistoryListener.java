@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public class HistoryListener implements Listener, HistoryReader {
 
+//    private Map<>
     @Override
     public void onUpdated(Message msg) {
         throw new UnsupportedOperationException();

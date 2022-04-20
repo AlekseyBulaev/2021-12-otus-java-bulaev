@@ -77,6 +77,15 @@ public class Message {
         return field10;
     }
 
+    public String getField11() {
+        return field11;
+    }
+    public String getField12() {
+        return field12;
+    }
+    public ObjectForMessage getField13() {
+        return field13;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
