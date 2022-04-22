@@ -3,10 +3,12 @@ object Versions {
     const val junit = "5.8.2"
     const val assertj = "3.22.0"
     const val mockito = "4.5.0"
+    const val jackson = "2.13.2.2"
 }
 
 object Libs {
     const val guava = "com.google.guava:guava:${Versions.guava}"
+    const val jackson = "com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}"
 
     val testImplementation = listOf(
         "org.assertj:assertj-core:${Versions.assertj}",
