@@ -39,11 +39,11 @@ class ProcessorTest {
         serializer.serialize(aggregatedMeasurements);
 
         //then
-        AssertionsForClassTypes.assertThat(loadedMeasurements.size()).isEqualTo(9);
-        AssertionsForClassTypes.assertThat(aggregatedMeasurements.entrySet().size()).isEqualTo(3);
+        assertThat(loadedMeasurements.size()).isEqualTo(9);
+        assertThat(aggregatedMeasurements.entrySet().size()).isEqualTo(3);
 
         var serializedOutput = Files.readString(Paths.get(fullOutputFilePath));
         //обратите внимание: важен порядок ключей
-        AssertionsForClassTypes.assertThat(serializedOutput).isEqualTo("{\"val1\":3.0,\"val2\":30.0,\"val3\":33.0}");
+        assertThat(serializedOutput).isEqualTo("{\"val1\":3.0,\"val2\":30.0,\"val3\":33.0}");
     }
 }
