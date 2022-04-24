@@ -17,7 +17,6 @@ public class ProcessorAggregator implements Processor {
     @Override
     public Map<String, Double> process(List<Measurement> data) {
         //группирует выходящий список по name, при этом суммирует поля value
-        var result = data.stream().collect(groupingBy(Measurement::getName, summingDouble(Measurement::getValue)));
-        return new TreeMap<>(result);
+        return data.stream().collect(groupingBy(Measurement::getName, TreeMap::new, summingDouble(Measurement::getValue)));
     }
 }

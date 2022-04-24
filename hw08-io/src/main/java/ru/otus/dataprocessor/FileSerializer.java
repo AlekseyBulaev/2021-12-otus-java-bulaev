@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 
 public class FileSerializer implements Serializer {
 
     private final String fileName;
 
-    ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public FileSerializer(String fileName) {
         this.fileName = fileName;
