@@ -8,10 +8,12 @@ import ru.otus.crm.model.Client;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DbServiceClientImpl implements DBServiceClient {
     private static final Logger log = LoggerFactory.getLogger(DbServiceClientImpl.class);
-
+    AtomicInteger ids = new AtomicInteger(0);
     private final DataTemplate<Client> dataTemplate;
     private final TransactionRunner transactionRunner;
 
