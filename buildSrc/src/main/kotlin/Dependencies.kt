@@ -8,6 +8,7 @@ object Versions {
     const val containerJUnit = "1.17.1"
     const val containerPostgres = "1.17.1"
     const val hikari = "5.0.1"
+    const val mockito = "4.3.1"
 }
 
 object Libs {
@@ -18,6 +19,10 @@ object Libs {
         "org.junit.jupiter:junit-jupiter-api:${Versions.junit}",
         "org.testcontainers:junit-jupiter:${Versions.containerJUnit}",
         "org.testcontainers:postgresql:${Versions.containerPostgres}",
+        "org.junit.jupiter:junit-jupiter-engine:${Versions.junit}",
+        "org.junit.jupiter:junit-jupiter-params:${Versions.junit}",
+        "org.mockito:mockito-core:${Versions.mockito}",
+        "org.mockito:mockito-junit-jupiter:${Versions.mockito}"
     )
 
     val testRuntimeOnly = listOf("org.junit.jupiter:junit-jupiter-engine")
