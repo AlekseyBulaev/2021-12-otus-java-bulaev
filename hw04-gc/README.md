@@ -30,16 +30,3 @@ spend msec:18284, sec:18
     5 - можно мержить, отличная работа. (при этом могут быть мелкие субъективные шероховатости)
 
 Рекомендуем сдать до: 07.02.2022
-
-
-results
-Xms:8g Xmx:8g       spend msec:14058, sec:14
-Xms:4g Xmx:4g       spend msec:13204, sec:13
-Xms:2g Xmx:2g       spend msec:12740, sec:12
-Xms:1800m Xmx:1800m spend msec:12519, sec:12
-Xms:1700m Xmx:1700m spend msec:11340, sec:11
-Xms:1512m Xmx:1512m spend msec:12866, sec:12
-Xms:1g Xmx:1g       spend msec:13227, sec:13
-Xms:512m Xmx:512m   spend msec:14966, sec:14
-
-финальный результат spend msec:3465, sec:3

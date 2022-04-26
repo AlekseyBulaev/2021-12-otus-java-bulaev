@@ -8,14 +8,17 @@ object Versions {
     const val containerJUnit = "1.17.1"
     const val containerPostgres = "1.17.1"
     const val hikari = "5.0.1"
-    const val mockito = "4.3.1"
+    const val mockito = "4.5.0"
+    const val jackson = "2.13.2.2"
 }
 
 object Libs {
     const val guava = "com.google.guava:guava:${Versions.guava}"
+    const val jackson = "com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}"
 
     val testImplementation = listOf(
         "org.assertj:assertj-core:${Versions.assertj}",
+        "org.mockito:mockito-core:${Versions.mockito}",
         "org.junit.jupiter:junit-jupiter-api:${Versions.junit}",
         "org.testcontainers:junit-jupiter:${Versions.containerJUnit}",
         "org.testcontainers:postgresql:${Versions.containerPostgres}",
