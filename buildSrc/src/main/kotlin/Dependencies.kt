@@ -16,7 +16,8 @@ object Libs {
         "org.junit.jupiter:junit-jupiter-api:${Versions.junit}",
         "org.junit.jupiter:junit-jupiter-engine:${Versions.junit}",
         "org.junit.jupiter:junit-jupiter-params:${Versions.junit}",
-        "org.mockito:mockito-junit-jupiter:${Versions.mockito}",
+        "org.mockito:mockito-core:${Versions.mockito}",
+        "org.mockito:mockito-junit-jupiter:${Versions.mockito}"
     )
 
     val testRuntimeOnly = listOf("org.junit.jupiter:junit-jupiter-engine")
