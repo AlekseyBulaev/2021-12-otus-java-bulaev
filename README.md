@@ -11,3 +11,4 @@ https://otus.ru/lessons/java-professional/?int_source=courses_catalog&amp;int_te
 * hw06-atm
 * hw07-todo
 * hw08-io
+* hw10-jpql
