@@ -15,6 +15,17 @@ public class Client implements Cloneable {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "address")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+
+    @Column(name = "phone")
+    @ManyToMany()
+    @JoinTable()
+    private Phone phone;
+
     public Client() {
     }
 
@@ -49,11 +60,29 @@ public class Client implements Cloneable {
         this.name = name;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Phone getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Phone phone) {
+        this.phone = phone;
+    }
+
     @Override
     public String toString() {
         return "Client{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
                 '}';
     }
 }

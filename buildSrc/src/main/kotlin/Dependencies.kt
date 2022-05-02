@@ -13,6 +13,8 @@ object Versions {
     const val hibernate = "6.0.0.Final"
     const val h2 = "2.1.212"
     const val javax = "2.2"
+    const val lombok = "1.18.22"
+
 }
 
 object Libs {
@@ -25,6 +27,7 @@ object Libs {
     const val hibernate = "org.hibernate:hibernate-core:${Versions.hibernate}"
     const val h2 = "com.h2database:h2:${Versions.h2}"
     const val javax = "javax.persistence:javax.persistence-api:${Versions.javax}"
+    const val lombok = "org.projectlombok:lombok:${Versions.lombok}"
 
     val testImplementation = listOf(
         "org.assertj:assertj-core:${Versions.assertj}",

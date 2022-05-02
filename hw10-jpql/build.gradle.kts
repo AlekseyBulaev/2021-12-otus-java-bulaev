@@ -5,7 +5,7 @@ dependencies {
     implementation(Libs.hikari)
     implementation(Libs.hibernate)
     implementation(Libs.javax)
-
+    implementation(Libs.lombok)
 
     testImplementation(Libs.h2)
     Libs.testImplementation.forEach(::testImplementation)
@@ -14,4 +14,7 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
