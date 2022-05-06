@@ -1,30 +1,38 @@
 package ru.otus.crm.model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "client")
 public class Client implements Cloneable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
+    @GeneratedValue
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "address")
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "address_id")
+    @OneToOne(
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
     private Address address;
 
 
-    @Column(name = "phone")
-    @ManyToMany()
-    @JoinTable()
-    private Phone phone;
+    @OneToMany(
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    private List<Phone> phones = new ArrayList<>();
 
     public Client() {
     }
@@ -39,9 +47,16 @@ public class Client implements Cloneable {
         this.name = name;
     }
 
+    public Client(Long id, String name, Address address, List<Phone> phones) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.phones = phones;
+    }
+
     @Override
     public Client clone() {
-        return new Client(this.id, this.name);
+        return new Client(this.id, this.name, this.address, this.phones);
     }
 
     public Long getId() {
@@ -68,12 +83,12 @@ public class Client implements Cloneable {
         this.address = address;
     }
 
-    public Phone getPhone() {
-        return phone;
+    public List<Phone> getPhones() {
+        return phones;
     }
 
-    public void setPhone(Phone phone) {
-        this.phone = phone;
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 
     @Override
@@ -82,7 +97,7 @@ public class Client implements Cloneable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
-                ", phone='" + phone + '\'' +
+                ", phone='" + phones + '\'' +
                 '}';
     }
 }

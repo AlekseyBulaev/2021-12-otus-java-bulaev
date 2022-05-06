@@ -10,7 +10,7 @@ object Versions {
     const val containerJUnit = "1.17.1"
     const val containerPostgres = "1.17.1"
     const val hikari = "5.0.1"
-    const val hibernate = "6.0.0.Final"
+    const val hibernate = "5.6.5.Final"
     const val h2 = "2.1.212"
     const val javax = "2.2"
     const val lombok = "1.18.22"

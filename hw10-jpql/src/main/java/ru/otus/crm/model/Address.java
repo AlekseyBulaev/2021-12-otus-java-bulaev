@@ -1,16 +1,9 @@
 package ru.otus.crm.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Table(name = "address")
+@Table(name = "addresses")
 public class Address {
 
     @Id
@@ -18,8 +11,21 @@ public class Address {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "street_address")
     private String street;
+
+    @JoinColumn(name = "client_id")
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private Client clientId;
+    public Address() {
+    }
+
+    public Address(Long id, String street) {
+        this.id = id;
+        this.street = street;
+    }
 
     @Override
     public String toString() {

@@ -1,5 +1,6 @@
 dependencies {
     implementation(Libs.postgres)
+    implementation(Libs.h2)
     implementation(Libs.flyway)
     implementation(Libs.logback)
     implementation(Libs.hikari)
