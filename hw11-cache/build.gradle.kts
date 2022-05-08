@@ -4,7 +4,6 @@ dependencies {
     implementation(Libs.logback)
     implementation(Libs.hikari)
 
-    implementation(project(":hw11-cache"))
     Libs.testImplementation.forEach(::testImplementation)
     Libs.testRuntimeOnly.forEach(::testRuntimeOnly)
 }
