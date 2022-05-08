@@ -18,7 +18,7 @@ public class Address {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    private Client clientId;
+    private Client client;
     public Address() {
     }
 
