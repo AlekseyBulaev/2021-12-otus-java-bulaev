@@ -18,15 +18,19 @@ public class DbServiceClientImpl implements DBServiceClient {
 
     private final DataTemplate<Client> clientDataTemplate;
     private final TransactionManager transactionManager;
-    private final MyCache<String, Client> cache = new MyCache<>();
-    public DbServiceClientImpl(TransactionManager transactionManager, DataTemplate<Client> clientDataTemplate) {
+    private final MyCache<String, Client> cache;
+    public DbServiceClientImpl(
+            TransactionManager transactionManager,
+            DataTemplate<Client> clientDataTemplate,
+            MyCache<String, Client> cache
+    ) {
         this.transactionManager = transactionManager;
         this.clientDataTemplate = clientDataTemplate;
+        this.cache = cache;
     }
 
     @Override
     public Client saveClient(Client client) {
-        cache.put("" + client.getId(), client);
         return transactionManager.doInTransaction(session -> {
             var clientCloned = client.clone();
             if (client.getId() == null) {
@@ -42,10 +46,11 @@ public class DbServiceClientImpl implements DBServiceClient {
 
     @Override
     public Optional<Client> getClient(long id) {
-        var client = Optional.of(cache.get("" + id));
-        if (isNull(client.get())) {
+        var client = Optional.ofNullable(cache.get("" + id));
+        if (client.isPresent()) {
             client = transactionManager.doInReadOnlyTransaction(session -> {
                 var clientOptional = clientDataTemplate.findById(session, id);
+                clientOptional.ifPresent(value -> cache.put("" + value.getId(), value));
                 log.info("client: {}", clientOptional);
                 return clientOptional;
             });
