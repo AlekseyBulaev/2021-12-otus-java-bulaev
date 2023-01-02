@@ -11,9 +11,9 @@ import java.util.WeakHashMap;
 
 public class MyCache<K, V> implements HwCache<K, V> {
     //Надо реализовать эти методы
-    private final String PUT = "put";
-    private final String GET = "get";
-    private final String REMOVE = "remove";
+    private static final String PUT = "put";
+    private static final String GET = "get";
+    private static final String REMOVE = "remove";
     private static final Logger logger = LoggerFactory.getLogger(MyCache.class);
 
     private final List<HwListener> listeners = new ArrayList<>();

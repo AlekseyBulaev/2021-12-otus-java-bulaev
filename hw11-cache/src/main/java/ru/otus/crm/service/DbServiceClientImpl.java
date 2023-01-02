@@ -2,7 +2,7 @@ package ru.otus.crm.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.cachehw.MyCache;
+import ru.otus.cachehw.HwCache;
 import ru.otus.core.repository.DataTemplate;
 import ru.otus.core.sessionmanager.TransactionManager;
 import ru.otus.crm.model.Client;
@@ -10,19 +10,17 @@ import ru.otus.crm.model.Client;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.isNull;
-
 public class DbServiceClientImpl implements DBServiceClient {
 
     private static final Logger log = LoggerFactory.getLogger(DbServiceClientImpl.class);
 
     private final DataTemplate<Client> clientDataTemplate;
     private final TransactionManager transactionManager;
-    private final MyCache<String, Client> cache;
+    private final HwCache<String, Client> cache;
     public DbServiceClientImpl(
             TransactionManager transactionManager,
             DataTemplate<Client> clientDataTemplate,
-            MyCache<String, Client> cache
+            HwCache<String, Client> cache
     ) {
         this.transactionManager = transactionManager;
         this.clientDataTemplate = clientDataTemplate;
