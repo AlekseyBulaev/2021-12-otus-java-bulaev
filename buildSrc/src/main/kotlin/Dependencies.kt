@@ -14,7 +14,10 @@ object Versions {
     const val h2 = "2.1.212"
     const val javax = "2.2"
     const val lombok = "1.18.22"
-
+    const val jetty = "11.0.7"
+    const val freemarker = "2.3.31"
+    const val gson = "2.9.1"
+    const val faker = "1.0.2"
 }
 
 object Libs {
@@ -28,20 +31,32 @@ object Libs {
     const val h2 = "com.h2database:h2:${Versions.h2}"
     const val javax = "javax.persistence:javax.persistence-api:${Versions.javax}"
     const val lombok = "org.projectlombok:lombok:${Versions.lombok}"
+    const val gson = "com.google.code.gson:gson:${Versions.gson}"
+    const val freemarker = "org.freemarker:freemarker:${Versions.freemarker}"
+    const val faker = "com.github.javafaker:javafaker:${Versions.faker}"
+
 
     val testImplementation = listOf(
         "org.assertj:assertj-core:${Versions.assertj}",
         "org.mockito:mockito-core:${Versions.mockito}",
         "org.mockito:mockito-junit-jupiter:${Versions.mockito}",
-
         "org.junit.jupiter:junit-jupiter-api:${Versions.junit}",
         "org.testcontainers:junit-jupiter:${Versions.containerJUnit}",
         "org.testcontainers:postgresql:${Versions.containerPostgres}",
         "org.junit.jupiter:junit-jupiter-engine:${Versions.junit}",
         "org.junit.jupiter:junit-jupiter-params:${Versions.junit}",
-
         "org.testcontainers:junit-jupiter:${Versions.containerJUnit}",
         "org.testcontainers:postgresql:${Versions.containerPostgres}",
+    )
+
+    val jetty = listOf(
+    "org.eclipse.jetty:jetty-servlet:${Versions.jetty}",
+    "org.eclipse.jetty:jetty-server:${Versions.jetty}",
+    "org.eclipse.jetty:jetty-webapp:${Versions.jetty}",
+    "org.eclipse.jetty:jetty-security:${Versions.jetty}",
+    "org.eclipse.jetty:jetty-http:${Versions.jetty}",
+    "org.eclipse.jetty:jetty-io:${Versions.jetty}",
+    "org.eclipse.jetty:jetty-util:${Versions.jetty}",
     )
     val testRuntimeOnly = listOf("org.junit.jupiter:junit-jupiter-engine")
 }

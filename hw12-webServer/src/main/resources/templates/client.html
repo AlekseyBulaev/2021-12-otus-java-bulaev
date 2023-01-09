@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Пользователи</title>
+    <script>
+        function getClient() {
+            const clientIdTextBox = document.getElementById('clientIdTextBox');
+            const clientDataContainer = document.getElementById('clientDataContainer');
+            const id = clientIdTextBox.value;
+            // fetch('api/client?id=' + id)
+            fetch('api/client/' + id)
+                .then(response => response.json())
+                .then(client => clientDataContainer.innerHTML = JSON.stringify(client));
+        }
+
+        function removeClient() {
+            const removeIdTextBox = document.getElementById('removeIdTextBox');
+            const removeDataContainer = document.getElementById('removeDataContainer');
+            const id = removeIdTextBox.value;
+            fetch('/clients', {
+                method: 'DELETE',
+                body: JSON.stringify(id)
+            })
+                .then(response => response.json())
+                .then(client => removeDataContainer.innerHTML = JSON.stringify(client));
+        }
+
+        function createClient() {
+            const createDataContainer = document.getElementById('createDataContainer');
+            fetch('/clients', {
+                method: 'POST',
+            })
+                .then(response => response.json())
+                .then(client => createDataContainer.innerHTML = JSON.stringify(client));
+        }
+
+        function updateClient() {
+            const updateIdTextBox = document.getElementById('updateIdTextBox');
+            const updateDataContainer = document.getElementById('updateDataContainer');
+            const id = updateIdTextBox.value;
+            fetch('/clients', {
+                method: 'PUT',
+                body: JSON.stringify(id)
+            })
+                .then(response => response.json())
+                .then(client => updateDataContainer.innerHTML = JSON.stringify(client));
+        }
+    </script>
+</head>
+
+<body>
+<h4>get client</h4>
+<input type="text" id = "clientIdTextBox" value="3" placeholder="Введите id клиента">
+<button onclick="getClient()">get</button>
+<pre id = "clientDataContainer"></pre>
+</body>
+
+<body>
+<h4>create client</h4>
+<button onclick="createClient()">create</button>
+<pre id = "createDataContainer"></pre>
+</body>
+
+<body>
+<h4>update client</h4>
+<input type="text" id = "updateIdTextBox" value="3" placeholder="Введите id клиента">
+<button onclick="updateClient()">update</button>
+<pre id = "updateDataContainer"></pre>
+</body>
+
+<body>
+<h4>delete cleint</h4>
+<input type="text" id = "removeIdTextBox" value="3" placeholder="Введите id клиента">
+<button onclick="removeClient()">delete</button>
+<pre id = "removeDataContainer"></pre>
+</body>
+
+</body>
+</html>
