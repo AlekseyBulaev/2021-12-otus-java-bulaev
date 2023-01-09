@@ -2,7 +2,7 @@
 ## Курс: Java Developer Professional
 https://otus.ru/lessons/java-professional/?int_source=courses_catalog&amp;int_term=programming
 
-### Доашние работы
+### Домашние работы
 * hw01-gradle
 * hw02-collections
 * hw03-annotations
