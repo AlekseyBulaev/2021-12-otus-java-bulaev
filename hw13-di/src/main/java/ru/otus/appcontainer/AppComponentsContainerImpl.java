@@ -49,18 +49,18 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     }
 
     private Object createZeroLevelInstance(Method method) {
-        var optional = appComponents.stream()
-                .filter(bean -> method.getDeclaringClass().isAssignableFrom(bean.getClass())).findFirst();
-        if (optional.isPresent()) return optional.get();
-        Object result;
-        try {
-            result = method.invoke(method.getDeclaringClass().getDeclaredConstructor().newInstance());
-        } catch (Exception e) {
-            throw new RuntimeException("Can't instantiate a zeroLevelInstance for class:"
-                    + method.getDeclaringClass().getName(), e);
-        }
-        appComponents.add(result);
-        return result;
+        var obj = appComponents.stream()
+                .filter(bean -> method.getDeclaringClass().isAssignableFrom(bean.getClass())).findFirst().orElseGet( () -> {
+                    try {
+                        return method.invoke(method.getDeclaringClass().getDeclaredConstructor().newInstance());
+                    } catch (Exception e) {
+                        throw new RuntimeException("Can't instantiate a zeroLevelInstance for class:"
+                                + method.getDeclaringClass().getName(), e);
+
+                }});
+
+        appComponents.add(obj);
+        return obj;
     }
 
     private Object createFirstLevelInstance(Method method) {
