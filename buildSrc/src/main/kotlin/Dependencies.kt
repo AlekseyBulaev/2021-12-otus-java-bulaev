@@ -35,7 +35,6 @@ object Libs {
     const val freemarker = "org.freemarker:freemarker:${Versions.freemarker}"
     const val faker = "com.github.javafaker:javafaker:${Versions.faker}"
 
-
     val testImplementation = listOf(
         "org.assertj:assertj-core:${Versions.assertj}",
         "org.mockito:mockito-core:${Versions.mockito}",
