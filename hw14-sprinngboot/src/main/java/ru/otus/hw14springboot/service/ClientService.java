@@ -1,14 +1,14 @@
 package ru.otus.hw14springboot.service;
 
-import ru.otus.hw14springboot.model.Client;
+import ru.otus.hw14springboot.dto.ClientDto;
 
 import java.util.List;
 
 public interface ClientService {
-    List<Client> findAll();
-    Client addClient();
+    List<ClientDto> findAll();
+    ClientDto addClient(ClientDto client);
 
-    Client findById(Long id);
-    void delete(Client client);
-    Client updateClient(Long id);
+    ClientDto findById(Long id);
+    void deleteClient(ClientDto client);
+    ClientDto updateClient(ClientDto client);
 }

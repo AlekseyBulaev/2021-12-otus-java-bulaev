@@ -1,57 +1,56 @@
 package ru.otus.hw14springboot.service;
 
-import com.github.javafaker.Faker;
 import org.springframework.stereotype.Service;
-import ru.otus.hw14springboot.model.Address;
+import ru.otus.hw14springboot.dto.ClientDto;
+import ru.otus.hw14springboot.dto.utils.ClientUtils;
 import ru.otus.hw14springboot.model.Client;
-import ru.otus.hw14springboot.model.Phone;
 import ru.otus.hw14springboot.repository.ClientRepository;
+import ru.otus.hw14springboot.sessionmanager.TransactionManager;
 
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 @Service
 public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
+    private final ClientUtils clientUtils;
+    private final TransactionManager transactionManager;
 
-    public ClientServiceImpl(ClientRepository clientRepository) {
+    public ClientServiceImpl(ClientRepository clientRepository, ClientUtils clientUtils, TransactionManager transactionManager) {
         this.clientRepository = clientRepository;
+        this.clientUtils = clientUtils;
+        this.transactionManager = transactionManager;
     }
 
     @Override
-    public List<Client> findAll() {
-        return StreamSupport
-                .stream(clientRepository.findAll().spliterator(), false)
-                .toList();
+    public List<ClientDto> findAll() {
+        return clientRepository.findAll().stream().map(clientUtils::fromClient).toList();
     }
 
     @Override
-    public Client addClient() {
-        return clientRepository.save(randomClient(null));
+    public ClientDto addClient(ClientDto clientDto) {
+        Client client = clientUtils.fromClientDto(clientDto);
+        Client result = transactionManager.doInTransaction(() ->
+                clientRepository.save(client)
+        );
+        return clientUtils.fromClient(result);
     }
 
     @Override
-    public Client findById(Long id) {
-        return clientRepository.findById(id)
+    public ClientDto findById(Long id) {
+        Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid client Id:" + id));
+        return clientUtils.fromClient(client);
     }
 
     @Override
-    public void delete(Client client) {
-        clientRepository.delete(client);
+    public void deleteClient(ClientDto client) {
+        clientRepository.delete(clientUtils.fromClientDto(client));
     }
 
     @Override
-    public Client updateClient(Long id) {
-        return clientRepository.save(randomClient(id));
-    }
-
-    private Client randomClient(Long id) {
-        Faker faker = new Faker();
-        var name = faker.name().fullName();
-        var phone = faker.phoneNumber().phoneNumber();
-        var address = faker.address().fullAddress();
-        return new Client(id, name, new Address(id, address), new Phone(id, phone));
+    public ClientDto updateClient(ClientDto clientDto) {
+        Client client = clientRepository.save(clientUtils.fromClientDto(clientDto));
+        return clientUtils.fromClient(client);
     }
 }
