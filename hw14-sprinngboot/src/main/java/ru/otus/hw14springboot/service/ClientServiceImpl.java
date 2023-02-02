@@ -45,12 +45,19 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void deleteClient(ClientDto client) {
-        clientRepository.delete(clientUtils.fromClientDto(client));
+        transactionManager.doInTransaction(() -> {
+            clientRepository.delete(clientUtils.fromClientDto(client));
+            return null;
+                }
+        );
+
     }
 
     @Override
     public ClientDto updateClient(ClientDto clientDto) {
-        Client client = clientRepository.save(clientUtils.fromClientDto(clientDto));
-        return clientUtils.fromClient(client);
+        Client result = transactionManager.doInTransaction(() ->
+                clientRepository.save(clientUtils.fromClientDto(clientDto))
+        );
+        return clientUtils.fromClient(result);
     }
 }
