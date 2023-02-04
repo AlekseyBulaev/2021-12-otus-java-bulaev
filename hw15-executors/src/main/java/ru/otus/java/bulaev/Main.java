@@ -19,6 +19,7 @@ public class Main {
                 }
             }
             printResult(threadName, i);
+            notifyAll();
         }
         for(int i = 9; i > 0 ; i--) {
             while (thread.equals(threadName)) {
@@ -29,12 +30,12 @@ public class Main {
                 }
             }
             printResult(threadName, i);
+            notifyAll();
         }
     }
 
     private void printResult(String threadName, int i) {
             System.out.println(threadName + ": " + i);
             thread = threadName;
-            notifyAll();
     }
 }
