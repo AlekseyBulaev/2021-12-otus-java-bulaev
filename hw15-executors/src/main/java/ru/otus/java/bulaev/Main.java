@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
         Main main = new Main();
         new Thread(() -> main.action("thread-1")).start();
-        new Thread(() -> main.action("thread-2")).start();
+        main.action("thread-2");
     }
 
 
