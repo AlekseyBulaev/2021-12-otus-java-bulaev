@@ -17,3 +17,4 @@ https://otus.ru/lessons/java-professional/?int_source=courses_catalog&amp;int_te
 * hw13-di
 * hw14-springBoot
 * hw15-executors
+* hw16-concurrentCollections
