@@ -10,7 +10,7 @@ public class GrpcResponseObserver implements StreamObserver<GrpcResponse> {
         this.actual = value;
     }
 
-    public synchronized long getValue(){
+    public synchronized long getValueAndReset(){
         var current = this.actual;
         this.actual = 0;
         return current;

@@ -2,6 +2,7 @@ package ru.otus.client;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import lombok.extern.slf4j.Slf4j;
 import ru.otus.generated.GrpcRequest;
 import ru.otus.generated.RemoteServiceGrpc;
 
@@ -10,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-
+@Slf4j
 public class GrpcClient {
     private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 8190;
@@ -21,7 +22,7 @@ public class GrpcClient {
             var client = new GrpcClient();
             client.start();
         }catch (Exception e){
-            e.printStackTrace();
+            log.error("Error in GrpcClient running start():", e);
         }
     }
 
@@ -37,7 +38,7 @@ public class GrpcClient {
         stub.generate(request, streamObserver);
 
         Runnable runnableTask = () -> {
-            current = current + streamObserver.getValue() + 1;
+            current = current + streamObserver.getValueAndReset() + 1;
             System.out.println("currentValue:" + current);
             latch.countDown();
         };
