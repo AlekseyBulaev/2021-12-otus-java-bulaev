@@ -58,7 +58,7 @@ public class MessageController {
             throw new ChatException("Can not get simpDestination header");
         }
         var roomId = parseRoomId(simpDestination);
-        Flux<Message> msg = Long.parseLong(MAGIC_ROOM_ID) == roomId ? getAllmessages() : getMessagesByRoomId(roomId);
+        Flux<Message> msg = MAGIC_ROOM_ID.equals(simpDestination) ? getAllmessages() : getMessagesByRoomId(roomId);
 
         msg.doOnError(ex -> logger.error("getting messages for roomId:{} failed", roomId, ex))
                 .subscribe(message -> template.convertAndSend(simpDestination, message));
